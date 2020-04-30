@@ -1,5 +1,5 @@
 # AutoWaifuClaimer
-Just a for fun project that listens and reads rolled waifus from Mudae, then auto claims it through keyboard input.
+Just a for fun project that listens and reads rolled waifus from Mudae, then auto claims it through keyboard input. Everything runs from [`bot.py`](./bot.py).
 
 ## Features
 * Automatically adds the respective emoji to claim the waifu within a fraction of a second
