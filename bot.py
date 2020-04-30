@@ -64,7 +64,10 @@ async def on_message(message):
     except IndexError:
         return
 
-    if embed.footer.text is _EmptyEmbed or "\n" in embed.description:
+    if embed.footer.text is _EmptyEmbed or embed.description is _EmptyEmbed:
+        return
+
+    if "\n" in embed.description:
         return
 
     with open('./data/rolled.txt', 'a', encoding='utf-8') as rolled:
