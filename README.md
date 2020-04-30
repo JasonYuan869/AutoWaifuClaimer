@@ -45,7 +45,7 @@ Key|Description|Value
 `user_id`|Your own Discord user ID for DMing purposes|Integer
 `token`|Your Discord bot token|String
 `command_prefix`|The prefix for Mudae commands (default: `"$"`)|String
-`w/m/h`|Whether to roll `$w`, `$m`, or `$h` commands (default: `"w"`|String
+`w/m/h`|Whether to roll `$w`, `$m`, or `$h` commands (default: `"w"`)|String
 `enable_dm`|Set false to disable DMs|Boolean
 `auto_roll_enable`|Set false to disable autorolling|Boolean
 `pokemon_enable`|Set false to disable Pokemon rolls|Boolean
@@ -76,4 +76,4 @@ Download the zipped release from the releases tab. Edit the files in the `/data`
 Licensed under GNU General Public License v3.0. See [LICENCE](./LICENSE).
 
 ## Disclaimer
-This project is in no way affiliated with the Mudae bot, found [here](https://top.gg/bot/432610292342587392). I am not responsible for salty friends if this steals their wishlist characters. I am also not responsible for banned Discord user accounts. Although, this should be safer than outright using an unofficial client, there are still no guarantees. Use at own risk.
+This project is in no way affiliated with the Mudae bot, found [here](https://top.gg/bot/432610292342587392). I am not responsible for salty friends if this steals their wishlist characters. I am also not responsible for banned Discord user accounts. Although this should be safer than outright using an unofficial client, there are still no guarantees. Use at own risk.
