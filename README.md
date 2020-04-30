@@ -1,5 +1,5 @@
 # AutoWaifuClaimer
-Just a for fun project that listens and reads rolled waifus from Mudae, then auto claims it through keyboard input. Everything runs from [`bot.py`](./bot.py).
+Just a fun mini-project that listens for rolled waifus from Mudae, then auto claims it through keyboard input. Everything runs from [`bot.py`](./bot.py).
 
 ## Features
 * Automatically adds the respective emoji to claim the waifu within a fraction of a second
@@ -50,3 +50,6 @@ Download the zipped release from the releases tab. Edit the files in the `/data`
 
 ## License
 Licensed under GNU General Public License v3.0. See [LICENCE](./LICENSE).
+
+## Disclaimer
+This project is in no way affiliated with the Mudae bot, found [here](https://top.gg/bot/432610292342587392). I am not responsible for salty friends if this steals their wishlist character. I am also not responsible for banned Discord user accounts. Although, this should be safer than outright using an unofficial client, there are still no guarantees. Use at own risk.
