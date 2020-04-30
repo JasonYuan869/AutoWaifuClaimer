@@ -13,6 +13,7 @@ Just a for fun project that listens and reads rolled waifus from Mudae, then aut
 * Must be focused on the Discord window, so it's not a background process
 * Cannot react to kakera
   * This is because Mudae uses a custom kakera emoji that cannot be entered from the keyboard
+* May potentially break if people spam the bot or the channel
 
 ## Requirements
 See [`requirements.txt`](./requirements.txt)
