@@ -39,6 +39,18 @@ except ValueError:
     print("Invalid entry in config.json! Double check the presence (or lack of) quotes. See README.md for more.")
     sys.exit()
 
+if not 0 <= reset_minute <= 59:
+    print("reset_min is outside of range! Check config.json.")
+    sys.exit()
+
+if not 0 <= daily_hour <= 23:
+    print("daily_hour is outside of range! Check config.json.")
+    sys.exit()
+
+if not 0 <= reset_hour <= 23:
+    print("reset_hour is outside of range! Check config.json.")
+    sys.exit()
+
 # Convert from local time to UTC (prevents DST problems)
 reset_hour = time.gmtime(time.mktime(time.strptime("2020 " + str(reset_hour), "%Y %H")))[3]
 daily_hour = time.gmtime(time.mktime(time.strptime("2020 " + str(daily_hour), "%Y %H")))[3]
