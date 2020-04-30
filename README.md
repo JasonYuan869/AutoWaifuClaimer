@@ -6,7 +6,7 @@ Just a for fun project that listens and reads rolled waifus from Mudae, then aut
   * Uses keyboard emoji input, rather than mouse input
 * Create a likelist for what the bot would react to
 * DM the user on every attempted claim
-* Save everything that was rolled and at what time in rolled.txt
+* Save everything that was rolled and at what time in `/data/rolled.txt`
 * *Technically* not a third-party client for user accounts, unlike other autoclaimers (which would be against the TOS)
 
 ## Limitations
@@ -22,7 +22,7 @@ See [`requirements.txt`](./requirements.txt)
 * keyboard
 
 ## Usage
-Clone this repository. Fill `config.json` with the respective data. For information on copying Discord IDs, see [this article](https://support.discordapp.com/hc/en-us/articles/206346498-Where-can-I-find-my-User-Server-Message-ID-). For information on making a bot, see [this article](https://www.writebots.com/discord-bot-token/).
+Clone this repository. All manual config files are in the `/data` directory. Fill `config.json` with the respective data. For information on copying Discord IDs, see [this article](https://support.discordapp.com/hc/en-us/articles/206346498-Where-can-I-find-my-User-Server-Message-ID-). For information on making a bot, see [this article](https://www.writebots.com/discord-bot-token/).
 ```
 {
   "bot_id": <MUDAMAID_ID_HERE>,
@@ -36,7 +36,7 @@ The bot must have the following permissions:
 * Send Messages
 * Read Message History
 
-Add your wishes to [`likelist.txt`](./likelist.txt). See that file for more information.
+Add your wishes to [`likelist.txt`](./data/likelist.txt). See that file for more information.
 
 Create a new virtual environment (optional) and install the required modules. Information can be found [here](https://docs.python.org/3/library/venv.html).
 ```
@@ -45,7 +45,8 @@ pip install -r requirements.txt
 
 Run `bot.py`. You must be focused on the Discord window in the specific waifu-rolling channel.
 
-A more user-friendly binary will be built soon.
+## Using the pre-built binary
+Download the zipped release from the releases tab. Edit the files in the `/data` folder as explained in the usage header. Run `bot.exe`.
 
 ## License
 Licensed under GNU General Public License v3.0. See [LICENCE](./LICENSE).
