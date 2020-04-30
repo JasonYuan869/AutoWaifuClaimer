@@ -45,7 +45,7 @@ Key|Description|Value
 `user_id`|Your own Discord user ID for DMing purposes|Integer
 `token`|Your Discord bot token|String
 `command_prefix`|The prefix for Mudae commands (default: `"$"`)|String
-`w/m/h`|Whether to roll `$w`, `$m`, or `$h` commands (default: `"w"`|String
+`w/m/h`|Whether to roll `$w`, `$m`, or `$h` commands (default: `"w"`)|String
 `enable_dm`|Set false to disable DMs|Boolean
 `auto_roll_enable`|Set false to disable autorolling|Boolean
 `pokemon_enable`|Set false to disable Pokemon rolls|Boolean
