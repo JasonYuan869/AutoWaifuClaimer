@@ -15,6 +15,7 @@ Just a fun mini-project that listens for rolled waifus from Mudae, then auto cla
 * Cannot react to kakera
   * This is because Mudae uses a custom kakera emoji that cannot be entered from the keyboard
 * May potentially break if people spam the bot or the channel
+* Will attempt claim regardless of having a claim ready
 
 ## Requirements
 See [`requirements.txt`](./requirements.txt)
@@ -47,7 +48,7 @@ pip install -r requirements.txt
 Run `bot.py`. You must be focused on the Discord window in the specific waifu-rolling channel.
 
 ## Using the pre-built binary (Windows only)
-Download the zipped release from the releases tab. Edit the files in the `/data` folder as explained in the above heading. Run `bot.exe`.
+Download the zipped release from the releases tab. Edit the files in the `/data` folder as explained in the above heading. Run `bot.exe`. You must be focused on the Discord window in the specific waifu-rolling channel.
 
 ## License
 Licensed under GNU General Public License v3.0. See [LICENCE](./LICENSE).
