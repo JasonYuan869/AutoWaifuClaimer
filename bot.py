@@ -46,7 +46,11 @@ def give_emoji(emoji):
 async def on_ready():
     print("Ready and listening! Check if the bot's online in the members panel!")
     global dm
-    dm = await client.get_user(user_id).create_dm()
+    try:
+        dm = await client.get_user(user_id).create_dm()
+    except AttributeError:
+        print("Invalid User ID! Check the entry in config.json.")
+        print("Bot will not DM the user of marry attempts!")
 
 
 @client.event
