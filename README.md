@@ -6,6 +6,7 @@ Just a for fun project that listens and reads rolled waifus from Mudae, then aut
   * Uses keyboard emoji input, rather than mouse input
 * Create a likelist for what the bot would react to
 * Save what was rolled by the bot in rolled.txt
+* *Technically* not a third-party client for user accounts, unlike other autoclaimers (which would be against the TOS)
 
 ## Requirements
 See requirements.txt
@@ -30,7 +31,7 @@ The bot must have the following permissions:
 
 Also add your wishes to 'likelist.txt'. See [likelist.txt](./likelist.txt) for more information.
 
-Create a new virtual environment (optional) and install the required modules. Information can be found [here](https://docs.python.org/3/library/venv.html)
+Create a new virtual environment (optional) and install the required modules. Information can be found [here](https://docs.python.org/3/library/venv.html).
 ```
 pip install -r requirements.txt
 ```
@@ -38,6 +39,9 @@ pip install -r requirements.txt
 Run the bot. You must be focused on the Discord window in the specific waifu-rolling channel.
 
 ## Limitations
-* Must be focused on the Discord window
+* Must be focused on the Discord window, so it's not a background process
 * Cannot react to kakera
   * This is because Mudae uses a custom kakera emoji that cannot be entered from the keyboard
+
+## License
+Licensed under GNU General Public License v3.0. See [LICENCE](./LICENSE).
