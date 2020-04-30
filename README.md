@@ -8,6 +8,7 @@ Just a fun mini-project that listens for rolled waifus from Mudae, then auto cla
 * DM the user on every attempted claim
 * Save everything that was rolled and at what time in `/data/rolled.txt`
 * *Technically* not a third-party client for user accounts, unlike other autoclaimers (which would be against the TOS)
+* Cross-platform support (requires sudo on Linux)
 
 ## Limitations
 * Must be focused on the Discord window, so it's not a background process
@@ -45,7 +46,7 @@ pip install -r requirements.txt
 
 Run `bot.py`. You must be focused on the Discord window in the specific waifu-rolling channel.
 
-## Using the pre-built binary
+## Using the pre-built binary (Windows only)
 Download the zipped release from the releases tab. Edit the files in the `/data` folder as explained in the above heading. Run `bot.exe`.
 
 ## License
