@@ -10,7 +10,7 @@ Just a for fun project that listens and reads rolled waifus from Mudae, then aut
 * *Technically* not a third-party client for user accounts, unlike other autoclaimers (which would be against the TOS)
 
 ## Requirements
-See requirements.txt
+See [`requirements.txt`](./requirements.txt)
 * Python 3.7+
 * discord.py
 * keyboard
