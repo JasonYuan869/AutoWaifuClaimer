@@ -15,7 +15,7 @@ See requirements.txt
 * keyboard
 
 ## Usage
-Clone this repository. Fill 'config.json' with the respected data. For information on copying Discord IDs, see [this article](https://support.discordapp.com/hc/en-us/articles/206346498-Where-can-I-find-my-User-Server-Message-ID-). For information on making a bot, see [this article](https://www.writebots.com/discord-bot-token/).
+Clone this repository. Fill `config.json` with the respected data. For information on copying Discord IDs, see [this article](https://support.discordapp.com/hc/en-us/articles/206346498-Where-can-I-find-my-User-Server-Message-ID-). For information on making a bot, see [this article](https://www.writebots.com/discord-bot-token/).
 ```
 {
   "bot_id": <MUDAMAID_ID_HERE>,
@@ -29,7 +29,7 @@ The bot must have the following permissions:
 * Send Messages
 * Read Message History
 
-Also add your wishes to 'likelist.txt'. See [likelist.txt](./likelist.txt) for more information.
+Also add your wishes to `likelist.txt`. See [likelist.txt](./likelist.txt) for more information.
 
 Create a new virtual environment (optional) and install the required modules. Information can be found [here](https://docs.python.org/3/library/venv.html).
 ```
