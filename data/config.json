@@ -1,6 +1,15 @@
 {
-  "bot_id": 123456789,
-  "channel_id": 123456789,
-  "user_id": 123456789,
-  "token": ""
+  "bot_id": 441849607968825285,
+  "channel_id": 587280293703959253,
+  "user_id": 587280293703959253,
+  "token": "",
+  "command_prefix": "$",
+  "w/m/h": "w",
+  "enable_dm": true,
+  "auto_roll_enable": true,
+  "pokemon_enable": true,
+  "roll_count": 10,
+  "reset_min": 0,
+  "reset_hour": 0,
+  "daily_hour": 0
 }
