@@ -36,7 +36,7 @@ Create a new virtual environment (optional) and install the required modules. In
 pip install -r requirements.txt
 ```
 
-Run the bot. You must be focused on the Discord window in the specific waifu-rolling channel.
+Run `bot.py`. You must be focused on the Discord window in the specific waifu-rolling channel.
 
 ## Limitations
 * Must be focused on the Discord window, so it's not a background process
