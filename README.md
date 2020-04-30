@@ -52,4 +52,4 @@ Download the zipped release from the releases tab. Edit the files in the `/data`
 Licensed under GNU General Public License v3.0. See [LICENCE](./LICENSE).
 
 ## Disclaimer
-This project is in no way affiliated with the Mudae bot, found [here](https://top.gg/bot/432610292342587392). I am not responsible for salty friends if this steals their wishlist character. I am also not responsible for banned Discord user accounts. Although, this should be safer than outright using an unofficial client, there are still no guarantees. Use at own risk.
+This project is in no way affiliated with the Mudae bot, found [here](https://top.gg/bot/432610292342587392). I am not responsible for salty friends if this steals their wishlist characters. I am also not responsible for banned Discord user accounts. Although, this should be safer than outright using an unofficial client, there are still no guarantees. Use at own risk.
