@@ -1,2 +1,6 @@
 /venv/
 /.idea/
+/dist/
+/build/
+/__pycache__/
+/bot.spec
