@@ -9,6 +9,11 @@ Just a for fun project that listens and reads rolled waifus from Mudae, then aut
 * Save everything that was rolled and at what time in rolled.txt
 * *Technically* not a third-party client for user accounts, unlike other autoclaimers (which would be against the TOS)
 
+## Limitations
+* Must be focused on the Discord window, so it's not a background process
+* Cannot react to kakera
+  * This is because Mudae uses a custom kakera emoji that cannot be entered from the keyboard
+
 ## Requirements
 See [`requirements.txt`](./requirements.txt)
 * Python 3.7+
@@ -38,11 +43,6 @@ pip install -r requirements.txt
 ```
 
 Run `bot.py`. You must be focused on the Discord window in the specific waifu-rolling channel.
-
-## Limitations
-* Must be focused on the Discord window, so it's not a background process
-* Cannot react to kakera
-  * This is because Mudae uses a custom kakera emoji that cannot be entered from the keyboard
 
 ## License
 Licensed under GNU General Public License v3.0. See [LICENCE](./LICENSE).
