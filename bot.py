@@ -13,8 +13,7 @@ with open('likelist.txt', 'r') as file_handle:
     likeArray = [x for x in likeArray if not x.startswith('#')]
     likeArray = [x.strip() for x in likeArray]
 
-with open('config.json') as file_handle:
-    config = json.load(file_handle)
+with json.load(open('config.json')) as config:
     bot_id = config["bot_id"]
     channel_id = config["channel_id"]
     user_id = config["user_id"]
