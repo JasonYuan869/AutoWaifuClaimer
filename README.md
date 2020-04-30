@@ -45,5 +45,7 @@ pip install -r requirements.txt
 
 Run `bot.py`. You must be focused on the Discord window in the specific waifu-rolling channel.
 
+A more user-friendly binary will be built soon.
+
 ## License
 Licensed under GNU General Public License v3.0. See [LICENCE](./LICENSE).
