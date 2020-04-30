@@ -5,7 +5,8 @@ Just a for fun project that listens and reads rolled waifus from Mudae, then aut
 * Automatically adds the respective emoji to claim the waifu within a fraction of a second
   * Uses keyboard emoji input, rather than mouse input
 * Create a likelist for what the bot would react to
-* Save what was rolled at what time in rolled.txt
+* DM the user on every attempted claim
+* Save everything that was rolled and at what time in rolled.txt
 * *Technically* not a third-party client for user accounts, unlike other autoclaimers (which would be against the TOS)
 
 ## Requirements
