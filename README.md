@@ -35,7 +35,7 @@ The bot must have the following permissions:
 * Send Messages
 * Read Message History
 
-Also add your wishes to `likelist.txt`. See [likelist.txt](./likelist.txt) for more information.
+Add your wishes to `likelist.txt`(./likelist.txt). See that file for more information.
 
 Create a new virtual environment (optional) and install the required modules. Information can be found [here](https://docs.python.org/3/library/venv.html).
 ```
