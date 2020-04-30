@@ -153,17 +153,6 @@ async def roller():
     current_hour = time.gmtime()[3]  # Returns the hour in UTC time
     i = 0
     emoji = None
-    if current_hour == daily_hour:
-        keyboard.write('{0}daily\n'.format(command_prefix))
-        keyboard.write('{0}dk\n'.format(command_prefix))
-        if dm_messages:
-            await dm.send(content="Daily commands sent.")
-
-    if current_hour % 2 == 0 and pokemon_enable:
-        keyboard.write('{0}p\n'.format(command_prefix))
-        if dm_messages:
-            await dm.send(content="Pokemon command sent.")
-
     while i < (roll_count - 1):
         i += 1
         keyboard.write('{0}{1}\n'.format(command_prefix, rollcommand))
@@ -195,6 +184,19 @@ async def roller():
                     pass
                 else:
                     await dm.send(content='Autoclaim attempted.', embed=embed)
+
+        if current_hour == daily_hour:
+            keyboard.write('{0}daily\n'.format(command_prefix))
+            await asyncio.sleep(3)
+            keyboard.write('{0}dk\n'.format(command_prefix))
+            await asyncio.sleep(3)
+            if dm_messages:
+                await dm.send(content="Daily commands sent.")
+
+        if current_hour % 2 == 0 and pokemon_enable:
+            keyboard.write('{0}p\n'.format(command_prefix))
+            if dm_messages:
+                await dm.send(content="Pokemon command sent.")
 
 try:
     client.run(token)
