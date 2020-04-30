@@ -8,12 +8,13 @@ from discord.embeds import _EmptyEmbed
 client = discord.Client()
 dm = None
 
-with open('likelist.txt', 'r') as file_handle:
+with open('./data/likelist.txt', 'r') as file_handle:
     likeArray = [x for x in file_handle.readlines() if not x.startswith('\n')]
     likeArray = [x for x in likeArray if not x.startswith('#')]
     likeArray = [x.strip() for x in likeArray]
 
-with json.load(open('config.json')) as config:
+with open('./data/config.json') as file_handle:
+    config = json.load(file_handle)
     bot_id = config["bot_id"]
     channel_id = config["channel_id"]
     user_id = config["user_id"]
@@ -62,7 +63,7 @@ async def on_message(message):
     if embed.footer.text is _EmptyEmbed or "\n" in embed.description:
         return
 
-    with open('rolled.txt', 'a', encoding='utf-8') as rolled:
+    with open('./data/rolled.txt', 'a', encoding='utf-8') as rolled:
         rolled.write(str(datetime.datetime.now()) + '\t' + embed.author.name + '\n')
         print(str(datetime.datetime.now()) + '\t' + embed.author.name)
 
