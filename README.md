@@ -21,7 +21,7 @@ See [`requirements.txt`](./requirements.txt)
 * keyboard
 
 ## Usage
-Clone this repository. Fill `config.json` with the respected data. For information on copying Discord IDs, see [this article](https://support.discordapp.com/hc/en-us/articles/206346498-Where-can-I-find-my-User-Server-Message-ID-). For information on making a bot, see [this article](https://www.writebots.com/discord-bot-token/).
+Clone this repository. Fill `config.json` with the respective data. For information on copying Discord IDs, see [this article](https://support.discordapp.com/hc/en-us/articles/206346498-Where-can-I-find-my-User-Server-Message-ID-). For information on making a bot, see [this article](https://www.writebots.com/discord-bot-token/).
 ```
 {
   "bot_id": <MUDAMAID_ID_HERE>,
