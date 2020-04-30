@@ -1,8 +1,9 @@
-import discord
-from discord.embeds import _EmptyEmbed
-import keyboard
-import json
 import datetime
+import json
+
+import discord
+import keyboard
+from discord.embeds import _EmptyEmbed
 
 client = discord.Client()
 dm = None
