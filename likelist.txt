@@ -1,0 +1,6 @@
+# Enter names EXACTLY as spelt in waifu-bot one per line
+# Use these hashmarks on new lines for comments
+# The bot ignores empty lines
+Rem
+Naruto Uzumaki
+Zero Two
