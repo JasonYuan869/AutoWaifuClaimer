@@ -15,7 +15,6 @@
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import datetime
-import errno
 import os
 import sys
 import time
@@ -28,12 +27,9 @@ import keyboard
 from discord.embeds import _EmptyEmbed
 
 if platform.system() == 'Linux':
-    try:
-        os.rename('/etc/foo', '/etc/bar')
-    except IOError as e:
-        if e[0] == errno.EPERM:
-            print("Please run with sudo privileges!")
-            sys.exit(1)
+    if os.getuid() != 0:
+        print("You must run with sudo privileges!")
+        sys.exit(1)
 
 
 client = discord.Client()
