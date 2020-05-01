@@ -18,8 +18,8 @@ import datetime
 import sys
 import time
 import asyncio
-import json
 
+import ujson
 import discord
 import keyboard
 from discord.embeds import _EmptyEmbed
@@ -34,7 +34,7 @@ with open('./data/likelist.txt', 'r') as file_handle:
     likeArray = [x.strip() for x in likeArray]
 
 with open('./data/config.json') as file_handle:
-    config = json.load(file_handle)
+    config = ujson.load(file_handle)
 
 try:
     bot_id = int(config["bot_id"])

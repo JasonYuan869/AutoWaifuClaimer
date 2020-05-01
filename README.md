@@ -33,6 +33,7 @@ See [`requirements.txt`](./requirements.txt)
 * Python 3.7+
 * discord.py
 * keyboard
+* ujson
 
 ## Usage
 Clone this repository. All manual config files are in the `/data` directory. Fill `config.json` with the respective data. For information on copying Discord IDs, see [this article](https://support.discordapp.com/hc/en-us/articles/206346498-Where-can-I-find-my-User-Server-Message-ID-). For information on making a bot, see [this article](https://www.writebots.com/discord-bot-token/).
