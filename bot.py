@@ -201,6 +201,7 @@ async def roller():
         except NameError:
             pass
         else:
+            await asyncio.sleep(3)
             if dm_messages:
                 message = await client.get_channel(payload.channel_id).fetch_message(payload.message_id)
                 try:
