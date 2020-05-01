@@ -51,10 +51,6 @@ if not 0 <= reset_hour <= 23:
     print("reset_hour is outside of range! Check config.json.")
     sys.exit()
 
-# Convert from local time to UTC (prevents DST problems)
-reset_hour = time.gmtime(time.mktime(time.strptime("2020 " + str(reset_hour), "%Y %H")))[3]
-daily_hour = time.gmtime(time.mktime(time.strptime("2020 " + str(daily_hour), "%Y %H")))[3]
-
 
 def give_emoji(emoji):
     if emoji == '❤':
@@ -162,7 +158,8 @@ async def wait():
 
 
 async def roller():
-    current_hour = time.gmtime()[3]  # Returns the hour in UTC time
+    payload = None
+    current_hour = time.localtime()[3]
     i = 0
     emoji = None
     while i < (roll_count - 1):
