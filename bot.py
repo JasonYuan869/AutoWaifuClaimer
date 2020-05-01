@@ -15,14 +15,26 @@
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import datetime
+import errno
+import os
 import sys
 import time
 import asyncio
+import platform
 
 import ujson
 import discord
 import keyboard
 from discord.embeds import _EmptyEmbed
+
+if platform.system() == 'Linux':
+    try:
+        os.rename('/etc/foo', '/etc/bar')
+    except IOError as e:
+        if e[0] == errno.EPERM:
+            print("Please run with sudo privileges!")
+            sys.exit(1)
+
 
 client = discord.Client()
 dm = None
@@ -53,19 +65,19 @@ try:
     dm_messages = config["enable_dm"]
 except ValueError:
     print("Invalid entry in config.json! Double check the presence (or lack of) quotes. See README.md for more.")
-    sys.exit()
+    sys.exit(1)
 
 if not 0 <= reset_minute <= 59:
     print("reset_min is outside of range! Check config.json.")
-    sys.exit()
+    sys.exit(1)
 
 if not 0 <= daily_hour <= 23:
     print("daily_hour is outside of range! Check config.json.")
-    sys.exit()
+    sys.exit(1)
 
 if not 0 <= reset_hour <= 23:
     print("reset_hour is outside of range! Check config.json.")
-    sys.exit()
+    sys.exit(1)
 
 
 def give_emoji(emoji):
@@ -228,4 +240,4 @@ try:
     client.run(token)
 except discord.errors.LoginFailure:
     print("Invalid bot token! Please double check your config.json file.")
-    sys.exit()
+    sys.exit(1)
