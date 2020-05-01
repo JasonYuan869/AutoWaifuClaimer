@@ -159,6 +159,7 @@ async def loop():
     while True:
         await wait()
         await roller()
+        await asyincio.sleep(3)
 
 
 async def wait():
