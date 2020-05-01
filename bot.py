@@ -182,7 +182,6 @@ async def roller():
             else:
                 emoji = str(payload.emoji)
                 break
-        print(emoji)
         try:
             give_emoji(emoji)
         except NameError:
