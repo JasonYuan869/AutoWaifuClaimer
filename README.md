@@ -9,7 +9,7 @@ Just a fun mini-project that listens for rolled waifus from Mudae, then auto cla
 * Save everything that was rolled and at what time in `/data/rolled.txt`
 * Automatically send roll commands
 * *Technically* not a third-party client for user accounts, unlike other autoclaimers (which would be against the TOS)
-* Cross-platform support (requires sudo on Linux)
+* Cross-platform support
 
 ## Limitations
 * Must be focused on the Discord window, so it's not a background process
@@ -32,7 +32,7 @@ user of what they attempted to claim. These options can be set in `config.json`.
 See [`requirements.txt`](./requirements.txt)
 * Python 3.7+
 * discord.py
-* keyboard
+* pynput
 
 ## Usage
 Clone this repository. All manual config files are in the `/data` directory. Fill `config.json` with the respective data. For information on copying Discord IDs, see [this article](https://support.discordapp.com/hc/en-us/articles/206346498-Where-can-I-find-my-User-Server-Message-ID-). For information on making a bot, see [this article](https://www.writebots.com/discord-bot-token/).
@@ -76,7 +76,7 @@ Download the zipped release for your OS from the releases tab. Edit the files in
 Run `bot.exe`. Focus on the Discord window in the specific waifu rolling channel.
 
 ### Linux
-Run `bot.sh` **as sudo**. Focus on the Discord window in the specific waifu rolling channel.
+Run `bot` through the command line. Focus on the Discord window in the specific waifu rolling channel.
 
 ## License
 Licensed under GNU General Public License v3.0. See [LICENCE](./LICENSE).

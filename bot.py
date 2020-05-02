@@ -23,7 +23,7 @@ import platform
 import json
 
 import discord
-import keyboard
+from pynput.keyboard import Key, Controller
 from discord.embeds import _EmptyEmbed
 
 
@@ -31,16 +31,12 @@ def close_program():
     print("Press enter to close the program.")
     input()
     sys.exit(1)
-
-
-if platform.system() == 'Linux':
-    if os.getuid() != 0:
-        print("You must run with sudo privileges!")
-        close_program()
+    
 
 client = discord.Client()
 dm = None
 run_once = True
+keyboard = Controller()
 
 with open('./data/likelist.txt', 'r') as file_handle:
     likeArray = [x for x in file_handle.readlines() if not x.startswith('\n')]
@@ -84,21 +80,37 @@ if not 0 <= reset_hour <= 23:
 
 def give_emoji(emoji):
     if emoji == '❤':
-        keyboard.write('+:heart:\n')
+        keyboard.type('+:heart:')
+        keyboard.press(Key.enter)
+        keyboard.release(Key.enter)
     elif emoji == '💖':
-        keyboard.write('+:sparkling_heart:\n')
+        keyboard.type('+:sparkling_heart:')
+        keyboard.press(Key.enter)
+        keyboard.release(Key.enter)
     elif emoji == '💘':
-        keyboard.write('+:cupid:\n')
+        keyboard.type('+:cupid:')
+        keyboard.press(Key.enter)
+        keyboard.release(Key.enter)
     elif emoji == '💕':
-        keyboard.write('+:two_hearts:\n')
+        keyboard.type('+:two_hearts:')
+        keyboard.press(Key.enter)
+        keyboard.release(Key.enter)
     elif emoji == '💓':
-        keyboard.write('+:heartbeat:\n')
+        keyboard.type('+:heartbeat:')
+        keyboard.press(Key.enter)
+        keyboard.release(Key.enter)
     elif emoji == '💗':
-        keyboard.write('+:heartpulse:\n')
+        keyboard.type('+:heartpulse:')
+        keyboard.press(Key.enter)
+        keyboard.release(Key.enter)
     elif emoji == '❣':
-        keyboard.write('+:heart_exclamation:\n')
+        keyboard.type('+:heart_exclamation:')
+        keyboard.press(Key.enter)
+        keyboard.release(Key.enter)
     elif emoji == '♥':
-        keyboard.write('+:hearts:\n')
+        keyboard.type('+:hearts:')
+        keyboard.press(Key.enter)
+        keyboard.release(Key.enter)
     else:
         raise NameError
 
@@ -195,10 +207,14 @@ async def roller():
     emoji = None
     while i < (roll_count - 1):
         i += 1
-        keyboard.write('{0}{1}\n'.format(command_prefix, rollcommand))
+        keyboard.type('{0}{1}'.format(command_prefix, rollcommand))
+        keyboard.press(Key.enter)
+        keyboard.release(Key.enter)
         await asyncio.sleep(3)
 
-    keyboard.write('{0}{1}\n'.format(command_prefix, rollcommand))
+    keyboard.type('{0}{1}'.format(command_prefix, rollcommand))
+    keyboard.press(Key.enter)
+    keyboard.release(Key.enter)
     if (current_hour - reset_hour) % 3 == 0:
         while True:
             try:
@@ -226,15 +242,21 @@ async def roller():
                     await dm.send(content='Autoclaim attempted.', embed=embed)
 
         if current_hour == daily_hour:
-            keyboard.write('{0}daily\n'.format(command_prefix))
+            keyboard.type('{0}daily'.format(command_prefix))
+            keyboard.press(Key.enter)
+            keyboard.release(Key.enter)
             await asyncio.sleep(3)
-            keyboard.write('{0}dk\n'.format(command_prefix))
+            keyboard.type('{0}dk'.format(command_prefix))
+            keyboard.press(Key.enter)
+            keyboard.release(Key.enter)
             await asyncio.sleep(3)
             if dm_messages:
                 await dm.send(content="Daily commands sent.")
 
         if current_hour % 2 == 0 and pokemon_enable:
-            keyboard.write('{0}p\n'.format(command_prefix))
+            keyboard.type('{0}p'.format(command_prefix))
+            keyboard.press(Key.enter)
+            keyboard.release(Key.enter)
             if dm_messages:
                 await dm.send(content="Pokemon command sent.")
 
