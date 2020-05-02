@@ -69,8 +69,14 @@ pip install -r requirements.txt
 
 Run `bot.py`. You must be focused on the Discord window in the specific waifu-rolling channel.
 
-## Using the pre-built binary (Windows only)
-Download the zipped release from the releases tab. Edit the files in the `/data` folder as explained in the above heading. Run `bot.exe`. You must be focused on the Discord window in the specific waifu-rolling channel.
+## Using the pre-built binary
+Download the zipped release for your OS from the releases tab. Edit the files in the `/data` folder as explained in the above heading. 
+
+### Windows
+Run `bot.exe`. Focus on the Discord window in the specific waifu rolling channel.
+
+### Linux
+Run `bot.sh` **as sudo**. Focus on the Discord window in the specific waifu rolling channel.
 
 ## License
 Licensed under GNU General Public License v3.0. See [LICENCE](./LICENSE).
