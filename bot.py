@@ -29,7 +29,7 @@ from discord.embeds import _EmptyEmbed
 if platform.system() == 'Linux':
     if os.getuid() != 0:
         print("You must run with sudo privileges!")
-        sys.exit(1)
+        close_program()
 
 
 client = discord.Client()
@@ -44,6 +44,11 @@ with open('./data/likelist.txt', 'r') as file_handle:
 with open('./data/config.json') as file_handle:
     config = json.load(file_handle)
 
+def close_program():
+    print("Press enter to close the program.")
+    input()
+    sys.exit(1)
+    
 try:
     bot_id = int(config["bot_id"])
     channel_id = int(config["channel_id"])
@@ -61,19 +66,19 @@ try:
     dm_messages = config["enable_dm"]
 except ValueError:
     print("Invalid entry in config.json! Double check the presence (or lack of) quotes. See README.md for more.")
-    sys.exit(1)
+    close_program()
 
 if not 0 <= reset_minute <= 59:
     print("reset_min is outside of range! Check config.json.")
-    sys.exit(1)
+    close_program()
 
 if not 0 <= daily_hour <= 23:
     print("daily_hour is outside of range! Check config.json.")
-    sys.exit(1)
+    close_program()
 
 if not 0 <= reset_hour <= 23:
     print("reset_hour is outside of range! Check config.json.")
-    sys.exit(1)
+    close_program()
 
 
 def give_emoji(emoji):
@@ -236,4 +241,4 @@ try:
     client.run(token)
 except discord.errors.LoginFailure:
     print("Invalid bot token! Please double check your config.json file.")
-    sys.exit(1)
+    close_program()
