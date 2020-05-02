@@ -21,6 +21,7 @@ import asyncio
 import json
 import random
 
+import aiohttp  # comes with discord.py
 import discord
 from pynput.keyboard import Key, Controller
 from discord.embeds import _EmptyEmbed
@@ -289,4 +290,7 @@ try:
     client.run(token)
 except discord.errors.LoginFailure:
     print("Invalid bot token! Please double check your config.json file.")
+    close_program()
+except aiohttp.client_exceptions.ClientConnectorError:
+    print("Unable to connect to Discord! Please check your internet connection.")
     close_program()
