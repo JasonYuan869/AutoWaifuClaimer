@@ -175,7 +175,7 @@ async def on_message(message):
     except IndexError:
         return
 
-    if type(embed.footer.text) is _EmptyEmbed or type(embed.description) is _EmptyEmbed \
+    if type(embed.footer.text) is not _EmptyEmbed or type(embed.description) is _EmptyEmbed \
             or type(embed.author.name) is _EmptyEmbed:
         return
 
