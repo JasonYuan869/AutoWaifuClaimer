@@ -7,6 +7,7 @@
   "w/m/h": "w",
   "enable_dm": true,
   "auto_roll_enable": true,
+  "random_auto_enable": true,
   "pokemon_enable": true,
   "roll_count": 10,
   "reset_min": 0,

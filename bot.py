@@ -15,16 +15,29 @@
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import datetime
-import os
 import sys
 import time
 import asyncio
-import platform
 import json
+import random
 
 import discord
 from pynput.keyboard import Key, Controller
 from discord.embeds import _EmptyEmbed
+
+
+def reset_now():
+    if (time.localtime()[3] - reset_hour) % 3 == 0:
+        return True
+    else:
+        return False
+
+
+def sleep_time():
+    if random_auto_enable:
+        return random.uniform(1.5, 5)
+    else:
+        return 3
 
 
 def close_program():
@@ -54,13 +67,14 @@ try:
     command_prefix = str(config["command_prefix"])
     rollcommand = str(config["w/m/h"])
 
-    auto_roll_enable = config["auto_roll_enable"]
-    pokemon_enable = config["pokemon_enable"]
+    auto_roll_enable = bool(config["auto_roll_enable"])
+    pokemon_enable = bool(config["pokemon_enable"])
     roll_count = int(config["roll_count"])
     reset_minute = int(config["reset_min"])
     reset_hour = int(config["reset_hour"])
     daily_hour = int(config["daily_hour"])
-    dm_messages = config["enable_dm"]
+    dm_messages = bool(config["enable_dm"])
+    random_auto_enable = bool(config["random_auto_enable"])
 except ValueError:
     print("Invalid entry in config.json! Double check the presence (or lack of) quotes. See README.md for more.")
     close_program()
@@ -139,6 +153,10 @@ async def on_ready():
         run_once = False
         if auto_roll_enable:
             print("Auto rolling is ENABLED! AFK with the Discord window focused and in your appropriate waifu channel.")
+            if random_auto_enable:
+                print("Random auto rolls are ENABLED! The bot has a 25% chance of rolling itself every hour.")
+            else:
+                print("Random auto rolls are DISABLED! The bot will roll itself every hour.")
             await loop()  # Must be the last thing, otherwise nothing else in this function will run
         else:
             print("Auto rolling is DISABLED! Edit config.json to enable.")
@@ -185,16 +203,17 @@ async def loop():
     while True:
         await wait()
         await roller()
-        await asyncio.sleep(3)
+        await asyncio.sleep(sleep_time())
 
 
 async def wait():
     now = datetime.datetime.now()
     if now.minute >= (reset_minute - 1):
-        dt = (now + datetime.timedelta(hours=1)).replace(minute=reset_minute - 1, second=0, microsecond=0)
+        dt = (now + datetime.timedelta(hours=1)).replace(minute=reset_minute-1, second=0, microsecond=0)
     else:
-        dt = now.replace(minute=reset_minute - 1, second=0, microsecond=0)
+        dt = now.replace(minute=reset_minute-1, second=0, microsecond=0)
     remaining_time = (dt - now).total_seconds()
+
     print("Waiting for {0}.".format(dt))
     print("Next rolling interval in {0} seconds.".format(remaining_time))
     await asyncio.sleep(remaining_time)
@@ -205,17 +224,22 @@ async def roller():
     current_hour = time.localtime()[3]
     i = 0
     emoji = None
+    if random_auto_enable and random.randint(1, 4) != 1:
+        print("The bot WILL NOT auto roll this hour.")
+        await asyncio.sleep(60)
+        return
+    print("The bot WILL auto roll now.")
     while i < (roll_count - 1):
         i += 1
         keyboard.type('{0}{1}'.format(command_prefix, rollcommand))
         keyboard.press(Key.enter)
         keyboard.release(Key.enter)
-        await asyncio.sleep(3)
+        await asyncio.sleep(sleep_time())
 
     keyboard.type('{0}{1}'.format(command_prefix, rollcommand))
     keyboard.press(Key.enter)
     keyboard.release(Key.enter)
-    if (current_hour - reset_hour) % 3 == 0:
+    if reset_now():
         while True:
             try:
                 payload = await client.wait_for('raw_reaction_add', timeout=3)
@@ -231,7 +255,7 @@ async def roller():
         except NameError:
             pass
         else:
-            await asyncio.sleep(3)
+            await asyncio.sleep(sleep_time())
             if dm_messages:
                 message = await client.get_channel(payload.channel_id).fetch_message(payload.message_id)
                 try:
@@ -245,11 +269,11 @@ async def roller():
             keyboard.type('{0}daily'.format(command_prefix))
             keyboard.press(Key.enter)
             keyboard.release(Key.enter)
-            await asyncio.sleep(3)
+            await asyncio.sleep(sleep_time())
             keyboard.type('{0}dk'.format(command_prefix))
             keyboard.press(Key.enter)
             keyboard.release(Key.enter)
-            await asyncio.sleep(3)
+            await asyncio.sleep(sleep_time())
             if dm_messages:
                 await dm.send(content="Daily commands sent.")
 
