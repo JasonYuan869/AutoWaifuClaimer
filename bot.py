@@ -171,7 +171,7 @@ async def on_message(message):
 
     try:
         embed = message.embeds[0]
-        print(embed.to_dict())
+        # print(embed.to_dict())
     except IndexError:
         return
 
