@@ -171,10 +171,12 @@ async def on_message(message):
 
     try:
         embed = message.embeds[0]
+        print(embed.to_dict())
     except IndexError:
         return
 
-    if embed.footer.text is _EmptyEmbed or embed.description is _EmptyEmbed or embed.author.name is _EmptyEmbed:
+    if type(embed.footer.text) is _EmptyEmbed or type(embed.description) is _EmptyEmbed \
+            or type(embed.author.name) is _EmptyEmbed:
         return
 
     if "\n" in embed.description:
