@@ -174,7 +174,7 @@ async def on_message(message):
     except IndexError:
         return
 
-    if embed.footer.text is _EmptyEmbed or embed.description is _EmptyEmbed:
+    if embed.footer.text is _EmptyEmbed or embed.description is _EmptyEmbed or embed.author.name is _EmptyEmbed:
         return
 
     if "\n" in embed.description:
