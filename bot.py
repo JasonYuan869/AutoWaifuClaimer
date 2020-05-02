@@ -26,11 +26,17 @@ import discord
 import keyboard
 from discord.embeds import _EmptyEmbed
 
+
+def close_program():
+    print("Press enter to close the program.")
+    input()
+    sys.exit(1)
+
+
 if platform.system() == 'Linux':
     if os.getuid() != 0:
         print("You must run with sudo privileges!")
         close_program()
-
 
 client = discord.Client()
 dm = None
@@ -44,11 +50,6 @@ with open('./data/likelist.txt', 'r') as file_handle:
 with open('./data/config.json') as file_handle:
     config = json.load(file_handle)
 
-def close_program():
-    print("Press enter to close the program.")
-    input()
-    sys.exit(1)
-    
 try:
     bot_id = int(config["bot_id"])
     channel_id = int(config["channel_id"])
@@ -236,6 +237,7 @@ async def roller():
             keyboard.write('{0}p\n'.format(command_prefix))
             if dm_messages:
                 await dm.send(content="Pokemon command sent.")
+
 
 try:
     client.run(token)
