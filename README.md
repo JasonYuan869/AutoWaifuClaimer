@@ -8,6 +8,7 @@ Just a fun mini-project that listens for rolled waifus from Mudae, then auto cla
 * DM the user on every attempted claim
 * Save everything that was rolled and at what time in `/data/rolled.txt`
 * Automatically send roll commands
+* Randomness feature to only roll for 25% of hours, to relieve suspicion
 * *Technically* not a third-party client for user accounts, unlike other autoclaimers (which would be against the TOS)
 * Cross-platform support
 
@@ -47,7 +48,8 @@ Key|Description|Value
 `command_prefix`|The prefix for Mudae commands (default: `"$"`)|String
 `w/m/h`|Whether to roll `$w`, `$m`, or `$h` commands (default: `"w"`)|String
 `enable_dm`|Set false to disable DMs|Boolean
-`auto_roll_enable`|Set false to disable autorolling|Boolean
+`auto_roll_enable`|Set false to disable auto rolling|Boolean
+`random_auto_enable`|Set true to only auto roll for 25% of hours|Boolean
 `pokemon_enable`|Set false to disable Pokemon rolls|Boolean
 `roll_count`|The number of rolls to send per reset (default: `10`)|Integer
 `reset_min`|The exact minute that the rolls reset|Integer[0-59]
