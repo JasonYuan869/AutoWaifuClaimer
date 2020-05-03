@@ -76,6 +76,7 @@ try:
     daily_hour = int(config["daily_hour"])
     dm_messages = bool(config["enable_dm"])
     random_auto_enable = bool(config["random_auto_enable"])
+    only_resets = bool(config["only_resets"])
 except ValueError:
     print("Invalid entry in config.json! Double check the presence (or lack of) quotes. See README.md for more.")
     close_program()
@@ -227,6 +228,10 @@ async def roller():
     current_hour = time.localtime()[3]
     i = 0
     emoji = None
+    if not reset_now() and only_resets:
+        print("This is not a reset hour.")
+        await asyncio.sleep(60)
+        return
     if random_auto_enable and random.randint(1, 4) != 1:
         print("The bot WILL NOT auto roll this hour.")
         await asyncio.sleep(60)

@@ -51,6 +51,7 @@ Key|Description|Value
 `auto_roll_enable`|Set false to disable auto rolling|Boolean
 `random_auto_enable`|Set true to only auto roll for 25% of hours|Boolean
 `pokemon_enable`|Set false to disable Pokemon rolls|Boolean
+`only_resets`|Set to true to only roll when claims will reset|Boolean
 `roll_count`|The number of rolls to send per reset (default: `10`)|Integer
 `reset_min`|The exact minute that the rolls reset|Integer[0-59]
 `reset_hour`|Any hour that claims reset. The bot assumes 3 hours between resets.|Integer[0-23]
