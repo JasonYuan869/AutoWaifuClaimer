@@ -1,2 +1,2 @@
 discord.py>=1.3.3
-pynput>=1.6.8
+arsenic>=19.1
