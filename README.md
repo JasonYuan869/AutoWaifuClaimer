@@ -47,7 +47,7 @@ Key|Description|Value
 ---|:---:|:---:
 `MUDAE_ID`|The ID of the respective Mudamaid bot|Integer
 `CHANNEL_ID`|The ID of the channel where waifus are rolled|Integer
-`SERVER_ID`|The ID of the server (guild) where the channel is located
+`SERVER_ID`|The ID of the server (guild) where the channel is located|Integer
 `USER_ID`|Your own Discord user ID for DMing purposes|Integer
 `BOT_TOKEN`|Your Discord bot token|String
 `COMMAND_PREFIX`|The prefix for Mudae commands (default: `"$"`)|String
