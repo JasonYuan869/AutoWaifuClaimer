@@ -14,290 +14,220 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import asyncio
 import datetime
 import sys
-import time
-import asyncio
-import json
-import random
 
-import aiohttp  # comes with discord.py
+import arsenic
 import discord
-from pynput.keyboard import Key, Controller
+from aiohttp import ClientConnectorError
+from arsenic import keys, browsers, services, start_session, stop_session
+from arsenic.actions import Keyboard, chain
+from arsenic.errors import ArsenicTimeout, NoSuchElement
+from discord import LoginFailure
 from discord.embeds import _EmptyEmbed
 
+import constants
 
-def reset_now():
-    if (time.localtime()[3] - reset_hour) % 3 == 0:
-        return True
+f = open('./log.txt', 'w')
+
+K = Keyboard()
+service = services.Geckodriver(log_file=f)
+browser = browsers.Firefox(**{'moz:firefoxOptions': {'args': ['-headless']}})
+session: arsenic.session.Session
+done = False
+
+
+async def stop():
+    print('Quitting...')
+    await stop_session(session)
+    await client.close()
+    f.close()
+    sys.exit()
+
+
+async def browser_init():
+    global done
+
+    # Open the WebDriver session to the stored channel
+    await session.get(f'https://discord.com/channels/{constants.SERVER_ID}/{constants.CHANNEL_ID}')
+
+    try:
+        # Wait for login screen
+        await session.wait_for_element(10, '[name="email"]')
+    except ArsenicTimeout:  # No login screen
+        # No login screen, but not the correct channel (some weird error)
+        if f'{constants.SERVER_ID}/{constants.CHANNEL_ID}' not in await session.get_url():
+            print('The channel did not load, but no login was asked!')
+            print('Double check the SERVER_ID and CHANNEL_ID entries in constants.py')
+            await stop()
     else:
-        return False
+        # Login attempt
+        print('Logging in with provided credentials...')
+        print('This can take up to 30 seconds.')
+        await (await session.get_element('[name="email"]')).send_keys(constants.LOGIN_INFO[0])
+        await (await session.get_element('[name="password"]')).send_keys(constants.LOGIN_INFO[1])
+        await (await session.get_element('button[type="submit"]')).click()
+        try:
+            # Wait for regular Discord to load
+            await session.wait_for_element(30, '.slateTextArea-1Mkdgw')
+
+            if f'{constants.SERVER_ID}/{constants.CHANNEL_ID}' not in await session.get_url():
+                raise ValueError
+        except ArsenicTimeout:
+            # Regular Discord did not load, login unsuccessful
+            print('Login was unsuccessful. Please check LOGIN_INFO entry in constants.py')
+            await stop()
+        except ValueError:
+            # Discord loaded, but no the correct channel (some weird error)
+            print('Login was successful, but the redirect was to the wrong channel.')
+            print('Try running the bot again.')
+            await stop()
+        else:
+            print("Login successful!")
+            done = True
 
 
-def sleep_time():
-    if random_auto_enable:
-        return random.uniform(1.5, 5)
-    else:
-        return 3
+async def send_command(text):
+    # Activate the window and type command prefix (because the keyboard can't do it)
+    await (await session.get_element('#chat-messages')).click()
+    await (await session.get_element('.slateTextArea-1Mkdgw')).send_keys(constants.COMMAND_PREFIX)
+
+    # For some reason, typing directly into the input box using Element.send_keys() doesn't work
+    # Arsenic actions must be used instead to send keyboard press by press (and they're confusing)
+    ticklist = []
+    for char in text:
+        ticklist.append(K.down(char))
+        ticklist.append(K.up(char))
+    ticklist.append(K.down(keys.ENTER))
+    ticklist.append(K.up(keys.ENTER))
+    await session.perform_actions(chain(*ticklist))
 
 
-def close_program():
-    print("Press enter to close the program.")
-    input()
-    sys.exit(1)
-    
+async def react_emoji(emoji, message_id):
+    try:
+        # Wait for message identified by ID to appear
+        # The Discord bot is faster than the web browser
+        await asyncio.sleep(1)
+        reaction_divs = await (await session.wait_for_element(2, f'[id="chat-messages-{message_id}"]'))\
+            .get_elements('div')
+        for element in reaction_divs:
+            # Find the emoji and click it
+            try:
+                if await element.get_attribute('class') != 'reactionInner-15NvIl focusable-1YV_-H': continue
+            except arsenic.errors.StaleElementReference:  # Weird error that idk why shows up
+                continue
+            if emoji in await element.get_attribute('aria-label'):
+                await element.click()
+                break
+    except ArsenicTimeout:
+        raise ValueError
+    except NoSuchElement:
+        raise ValueError
+
+
+# DISCORD STUFF BELOW
 
 client = discord.Client()
-dm = None
-run_once = True
-keyboard = Controller()
+initiated = False
+dm: discord.DMChannel
+daily_timer = datetime.datetime.now()
 
+# Open and parse likelist into like_array
 with open('./data/likelist.txt', 'r') as file_handle:
-    likeArray = [x for x in file_handle.readlines() if not x.startswith('\n')]
-    likeArray = [x for x in likeArray if not x.startswith('#')]
-    likeArray = [x.strip() for x in likeArray]
-
-with open('./data/config.json') as file_handle:
-    config = json.load(file_handle)
-
-try:
-    bot_id = int(config["bot_id"])
-    channel_id = int(config["channel_id"])
-    user_id = int(config["user_id"])
-    token = str(config["token"])
-    command_prefix = str(config["command_prefix"])
-    rollcommand = str(config["w/m/h"])
-
-    auto_roll_enable = bool(config["auto_roll_enable"])
-    pokemon_enable = bool(config["pokemon_enable"])
-    roll_count = int(config["roll_count"])
-    reset_minute = int(config["reset_min"])
-    reset_hour = int(config["reset_hour"])
-    daily_hour = int(config["daily_hour"])
-    dm_messages = bool(config["enable_dm"])
-    random_auto_enable = bool(config["random_auto_enable"])
-    only_resets = bool(config["only_resets"])
-except ValueError:
-    print("Invalid entry in config.json! Double check the presence (or lack of) quotes. See README.md for more.")
-    close_program()
-
-if not 0 <= reset_minute <= 59:
-    print("reset_min is outside of range! Check config.json.")
-    close_program()
-
-if not 0 <= daily_hour <= 23:
-    print("daily_hour is outside of range! Check config.json.")
-    close_program()
-
-if not 0 <= reset_hour <= 23:
-    print("reset_hour is outside of range! Check config.json.")
-    close_program()
-
-
-def give_emoji(emoji):
-    if emoji == '❤':
-        keyboard.type('+:heart:')
-        keyboard.press(Key.enter)
-        keyboard.release(Key.enter)
-    elif emoji == '💖':
-        keyboard.type('+:sparkling_heart:')
-        keyboard.press(Key.enter)
-        keyboard.release(Key.enter)
-    elif emoji == '💘':
-        keyboard.type('+:cupid:')
-        keyboard.press(Key.enter)
-        keyboard.release(Key.enter)
-    elif emoji == '💕':
-        keyboard.type('+:two_hearts:')
-        keyboard.press(Key.enter)
-        keyboard.release(Key.enter)
-    elif emoji == '💓':
-        keyboard.type('+:heartbeat:')
-        keyboard.press(Key.enter)
-        keyboard.release(Key.enter)
-    elif emoji == '💗':
-        keyboard.type('+:heartpulse:')
-        keyboard.press(Key.enter)
-        keyboard.release(Key.enter)
-    elif emoji == '❣':
-        keyboard.type('+:heart_exclamation:')
-        keyboard.press(Key.enter)
-        keyboard.release(Key.enter)
-    elif emoji == '♥':
-        keyboard.type('+:hearts:')
-        keyboard.press(Key.enter)
-        keyboard.release(Key.enter)
-    else:
-        raise NameError
+    like_array = [x for x in file_handle.readlines() if not x.startswith('\n')]
+    like_array = [x for x in like_array if not x.startswith('#')]
+    like_array = [x.strip() for x in like_array]
 
 
 @client.event
 async def on_ready():
-    global run_once
+    global initiated
     global dm
-    global dm_messages
+    global session
 
-    print("Ready and listening! Check if the bot's online in the members panel!")
-
-    if dm_messages:
-        try:
-            dm = await client.get_user(user_id).create_dm()
-        except AttributeError:
-            print("Invalid User ID! Check the entry in config.json.")
-            print("Bot will not DM the user of marry attempts!")
-            dm_messages = False
-        else:
-            print("DMs are ENABLED! The bot will message you of marry attempts.")
-    else:
-        print("DMs are DISABLED! You will not receive any messages from the bot.")
-
-    if run_once:  # Because on_ready() may execute more than once, breaking the bot
-        run_once = False
-        if auto_roll_enable:
-            print("Auto rolling is ENABLED! AFK with the Discord window focused and in your appropriate waifu channel.")
-            if random_auto_enable:
-                print("Random auto rolls are ENABLED! The bot has a 25% chance of rolling itself every hour.")
-            else:
-                print("Random auto rolls are DISABLED! The bot will roll itself every hour.")
-            await loop()  # Must be the last thing, otherwise nothing else in this function will run
-        else:
-            print("Auto rolling is DISABLED! Edit config.json to enable.")
+    # First time initialization, only to be run once
+    if not initiated:
+        dm = await client.get_user(constants.USER_ID).create_dm()
+        session = await start_session(service, browser)
+        await browser_init()
+        initiated = True
 
 
 @client.event
 async def on_message(message):
     global dm
-    if message.author.id != bot_id or message.channel.id != channel_id:
+    global done
+    global daily_timer
+
+    if not done: return
+    
+    # Daily routines
+    if (datetime.datetime.now() - daily_timer) >= datetime.timedelta(hours=20):
+        daily_timer = datetime.datetime.now()
+        await send_command('daily')
+        await asyncio.sleep(2)
+        await send_command('dk')
+    
+    # Check if we care about the message
+    if message.author.id != constants.MUDAE_ID or message.channel.id != constants.CHANNEL_ID:
         return
 
+    # Check if the message has an embed
     try:
         embed = message.embeds[0]
-        # print(embed.to_dict())
     except IndexError:
         return
 
-    if type(embed.footer.text) is not _EmptyEmbed or type(embed.description) is _EmptyEmbed \
-            or type(embed.author.name) is _EmptyEmbed:
+    # Check if the embed is a valid roll
+    if type(embed.description) is _EmptyEmbed or type(embed.author.name) is _EmptyEmbed:
+        return
+    if '\n' in embed.description:
         return
 
-    if "\n" in embed.description:
-        return
+    # Check footer text for "belongs to"
+    # If so, react with appropriate kakera emoji
+    if type(embed.footer.text) is not _EmptyEmbed:
+        if 'Belongs to' in embed.footer.text:
+            try:
+                payload = await client.wait_for('raw_reaction_add', timeout=3)
+            except asyncio.TimeoutError:
+                return
+            emoji = str(payload.emoji)
+            try:
+                await react_emoji(emoji, message.id)
+            except ValueError:
+                return
+            else:
+                await dm.send(content='Kakera loot attempted.', embed=embed)
+            return  # End
 
     with open('./data/rolled.txt', 'a', encoding='utf-8') as rolled:
         rolled.write(str(datetime.datetime.now()) + '\t' + embed.author.name + '\n')
         print(str(datetime.datetime.now()) + '\t' + embed.author.name)
 
-    if embed.author.name in likeArray:
+    if embed.author.name in like_array:
         try:
             payload = await client.wait_for('raw_reaction_add', timeout=3)
         except asyncio.TimeoutError:
             return
         emoji = str(payload.emoji)
+        print(emoji)
         try:
-            give_emoji(emoji)
-        except NameError:
+            await react_emoji(emoji, message.id)
+        except ValueError:
             return
         else:
-            if dm_messages:
-                await dm.send(content='Claim attempted.', embed=embed)
-            return
-
-
-async def loop():
-    while True:
-        await wait()
-        await roller()
-        await asyncio.sleep(sleep_time())
-
-
-async def wait():
-    now = datetime.datetime.now()
-    if now.minute >= (reset_minute - 1):
-        dt = (now + datetime.timedelta(hours=1)).replace(minute=reset_minute-1, second=0, microsecond=0)
-    else:
-        dt = now.replace(minute=reset_minute-1, second=0, microsecond=0)
-    remaining_time = (dt - now).total_seconds()
-
-    print("Waiting for {0}.".format(dt))
-    print("Next rolling interval in {0} seconds.".format(remaining_time))
-    await asyncio.sleep(remaining_time)
-
-
-async def roller():
-    payload = None
-    current_hour = time.localtime()[3]
-    i = 0
-    emoji = None
-    if not reset_now() and only_resets:
-        print("This is not a reset hour.")
-        await asyncio.sleep(60)
-        return
-    if random_auto_enable and random.randint(1, 4) != 1:
-        print("The bot WILL NOT auto roll this hour.")
-        await asyncio.sleep(60)
-        return
-    print("The bot WILL auto roll now.")
-    while i < (roll_count - 1):
-        i += 1
-        keyboard.type('{0}{1}'.format(command_prefix, rollcommand))
-        keyboard.press(Key.enter)
-        keyboard.release(Key.enter)
-        await asyncio.sleep(sleep_time())
-
-    keyboard.type('{0}{1}'.format(command_prefix, rollcommand))
-    keyboard.press(Key.enter)
-    keyboard.release(Key.enter)
-    if reset_now():
-        while True:
-            try:
-                payload = await client.wait_for('raw_reaction_add', timeout=3)
-            except asyncio.TimeoutError:
-                break
-            if payload.channel_id != channel_id or payload.user_id != bot_id:
-                continue
-            else:
-                emoji = str(payload.emoji)
-                break
-        try:
-            give_emoji(emoji)
-        except NameError:
-            pass
-        else:
-            await asyncio.sleep(sleep_time())
-            if dm_messages:
-                message = await client.get_channel(payload.channel_id).fetch_message(payload.message_id)
-                try:
-                    embed = message.embeds[0]
-                except IndexError:
-                    pass
-                else:
-                    await dm.send(content='Autoclaim attempted.', embed=embed)
-
-        if current_hour == daily_hour:
-            keyboard.type('{0}daily'.format(command_prefix))
-            keyboard.press(Key.enter)
-            keyboard.release(Key.enter)
-            await asyncio.sleep(sleep_time())
-            keyboard.type('{0}dk'.format(command_prefix))
-            keyboard.press(Key.enter)
-            keyboard.release(Key.enter)
-            await asyncio.sleep(sleep_time())
-            if dm_messages:
-                await dm.send(content="Daily commands sent.")
-
-        if current_hour % 2 == 0 and pokemon_enable:
-            keyboard.type('{0}p'.format(command_prefix))
-            keyboard.press(Key.enter)
-            keyboard.release(Key.enter)
-            if dm_messages:
-                await dm.send(content="Pokemon command sent.")
+            await dm.send(content='Claim attempted.', embed=embed)
 
 
 try:
-    client.run(token)
-except discord.errors.LoginFailure:
+    client.run(constants.BOT_TOKEN)
+except LoginFailure:
     print("Invalid bot token! Please double check your config.json file.")
-    close_program()
-except aiohttp.client_exceptions.ClientConnectorError:
+    print("Quitting...")
+    sys.exit()
+except ClientConnectorError:
     print("Unable to connect to Discord! Please check your internet connection.")
-    close_program()
+    print("Quitting...")
+    sys.exit()
