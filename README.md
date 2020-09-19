@@ -1,61 +1,57 @@
 # AutoWaifuClaimer
 Just a fun mini-project that listens for rolled waifus from Mudae, then auto claims it through keyboard input. Everything runs from [`bot.py`](./bot.py).
 
+## Difference with version 1 (in the master branch)
+The original bot used pynput for keyboard control to react to emojis and type commands in chat. This came with the major limitation that there had to be a physical Discord window focused permanantly on the rolling channel. With version 2, I use arsenic (basically selenium browser automation but async) to open a headless Firefox and login to the Discord web app. Now, the browser is controlled with python and no physical window is needed. Since now the bot can "click" on emojis instead of using keyboard input, it can also now react to Kakera.
+
+This is a brand new implementation of the bot, and therefore many of the (experimental) features from version 1 is a WIP. For example, the bot cannot currently roll automatically every hour (I don't know if I will ever implement this).
+
 ## Features
 * Automatically adds the respective emoji to claim the waifu within a fraction of a second
   * Uses keyboard emoji input, rather than mouse input
 * Create a likelist for what the bot would react to
 * DM the user on every attempted claim
 * Save everything that was rolled and at what time in `/data/rolled.txt`
-* Automatically send roll commands
-* Randomness feature to only roll for 25% of hours, to relieve suspicion
+* Automatically react to kakera and DM the user on attempts
 * *Technically* not a third-party client for user accounts, unlike other autoclaimers (which would be against the TOS)
 * Cross-platform support
+* Can be run in the background (unlike v1)
 
 ## Limitations
-* Must be focused on the Discord window, so it's not a background process
-* Cannot react to kakera
-  * This is because Mudae uses a custom kakera emoji that cannot be entered from the keyboard
 * May potentially break if people spam the bot or the channel
-* Will attempt claim regardless of having a claim ready
+* Will attempt claim regardless of having a claim ready (marry and kakera attempts)
+* You need to supply the bot with plaintext Discord login (2FA disabled)
+ * It will not transfer this over the internet, but rather use it locally to login within a headless browser
 
 ## How it works
 The bot listens for all valid, unclaimed rolls output by the Mudae bot (or Mudamaid).
 If the name of a roll matches with one in a predetermined list (`likelist.txt`),
 then it will listen for the respective emoji that Mudae reacts. Lastly, it instantly reacts back with that emoji.
 
-The bot can also autoroll at specified time intervals automatically, using a claim just before the reset to not waste it.
-
-When an attempted claim is made (either because it matched the list or the claim would reset soon), the bot can DM the
-user of what they attempted to claim. These options can be set in `config.json`.
+When an attempted claim is made (either because it matched the list or the claim would reset soon), the bot will DM the
+user of what they attempted to claim. These options can be set in `constants.py`.
 
 ## Requirements
 See [`requirements.txt`](./requirements.txt)
 * Python 3.7+
 * discord.py
-* pynput
+* arsenic
+
+Also setup Firefox with Geckodriver.
 
 ## Usage
-Clone this repository. All manual config files are in the `/data` directory. Fill `config.json` with the respective data. For information on copying Discord IDs, see [this article](https://support.discordapp.com/hc/en-us/articles/206346498-Where-can-I-find-my-User-Server-Message-ID-). For information on making a bot, see [this article](https://www.writebots.com/discord-bot-token/).
+Clone this repository. All manual config files are in the `/data` directory. Fill `constants.py` with the respective data. For information on copying Discord IDs, see [this article](https://support.discordapp.com/hc/en-us/articles/206346498-Where-can-I-find-my-User-Server-Message-ID-). For information on making a bot, see [this article](https://www.writebots.com/discord-bot-token/).
 Number of rolls and reset times can be found by entering `$settings` to Mudae bot.
 
 Key|Description|Value
 ---|:---:|:---:
-`bot_id`|The ID of the respective Mudamaid bot|Integer
-`channel_id`|The ID of the channel where waifus are rolled|Integer
-`user_id`|Your own Discord user ID for DMing purposes|Integer
-`token`|Your Discord bot token|String
-`command_prefix`|The prefix for Mudae commands (default: `"$"`)|String
-`w/m/h`|Whether to roll `$w`, `$m`, or `$h` commands (default: `"w"`)|String
-`enable_dm`|Set false to disable DMs|Boolean
-`auto_roll_enable`|Set false to disable auto rolling|Boolean
-`random_auto_enable`|Set true to only auto roll for 25% of hours|Boolean
-`pokemon_enable`|Set false to disable Pokemon rolls|Boolean
-`only_resets`|Set to true to only roll when claims will reset|Boolean
-`roll_count`|The number of rolls to send per reset (default: `10`)|Integer
-`reset_min`|The exact minute that the rolls reset|Integer[0-59]
-`reset_hour`|Any hour that claims reset. The bot assumes 3 hours between resets.|Integer[0-23]
-`daily_hour`|The hour to run `$daily` and `$dailykakera` commands|Integer[0-23]
+`MUDAE_ID`|The ID of the respective Mudamaid bot|Integer
+`CHANNEL_ID`|The ID of the channel where waifus are rolled|Integer
+`SERVER_ID`|The ID of the server (guild) where the channel is located
+`USER_ID`|Your own Discord user ID for DMing purposes|Integer
+`BOT_TOKEN`|Your Discord bot token|String
+`COMMAND_PREFIX`|The prefix for Mudae commands (default: `"$"`)|String
+`LOGIN_INFO`|Your Discord user login|Tuple(String, String)
 
 
 The bot must have the following permissions:
@@ -70,16 +66,10 @@ Create a new virtual environment (optional) and install the required modules. In
 pip install -r requirements.txt
 ```
 
-Run `bot.py`. You must be focused on the Discord window in the specific waifu-rolling channel.
+Run `bot.py`.
 
 ## Using the pre-built binary
-Download the zipped release for your OS from the releases tab. Edit the files in the `/data` folder as explained in the above heading. 
-
-### Windows
-Run `bot.exe`. Focus on the Discord window in the specific waifu rolling channel.
-
-### Linux
-Run `bot` through the command line. Focus on the Discord window in the specific waifu rolling channel.
+WIP
 
 ## License
 Licensed under GNU General Public License v3.0. See [LICENCE](./LICENSE).
