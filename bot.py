@@ -14,20 +14,21 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import asyncio
 import datetime
-import sys
 
-import arsenic
-import discord
 from aiohttp import ClientConnectorError
-from arsenic import keys, browsers, services, start_session, stop_session
-from arsenic.actions import Keyboard, chain
-from arsenic.errors import ArsenicTimeout, NoSuchElement
 from discord import LoginFailure
 from discord.embeds import _EmptyEmbed
 
 import constants
+import sys
+
+import asyncio
+import discord
+import arsenic
+from arsenic import keys, browsers, services, start_session, stop_session
+from arsenic.actions import Keyboard, chain
+from arsenic.errors import ArsenicTimeout, NoSuchElement
 
 f = open('./log.txt', 'w')
 
@@ -109,7 +110,7 @@ async def react_emoji(emoji, message_id):
         # Wait for message identified by ID to appear
         # The Discord bot is faster than the web browser
         await asyncio.sleep(1)
-        reaction_divs = await (await session.wait_for_element(2, f'[id="chat-messages-{message_id}"]'))\
+        reaction_divs = await (await session.wait_for_element(5, f'[id="chat-messages-{message_id}"]'))\
             .get_elements('div')
         for element in reaction_divs:
             # Find the emoji and click it
@@ -182,7 +183,9 @@ async def on_message(message):
     # Check if the embed is a valid roll
     if type(embed.description) is _EmptyEmbed or type(embed.author.name) is _EmptyEmbed:
         return
-    if '\n' in embed.description:
+    if 'Claims: ' in embed.description:  # Ignore $im commands
+        return
+    if '/' in embed.author.name:  # Ignore $ima commands
         return
 
     # Check footer text for "belongs to"
@@ -193,7 +196,9 @@ async def on_message(message):
                 payload = await client.wait_for('raw_reaction_add', timeout=3)
             except asyncio.TimeoutError:
                 return
-            emoji = str(payload.emoji)
+            emoji = str(payload.emoji.name)
+            with open('./data/rolled.txt', 'a', encoding='utf-8') as log:
+                log.write(str(datetime.datetime.now()) + '\t' + emoji + '\n')
             try:
                 await react_emoji(emoji, message.id)
             except ValueError:
@@ -231,3 +236,4 @@ except ClientConnectorError:
     print("Unable to connect to Discord! Please check your internet connection.")
     print("Quitting...")
     sys.exit()
+
