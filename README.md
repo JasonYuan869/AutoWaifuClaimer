@@ -2,7 +2,7 @@
 Just a fun mini-project that listens for rolled waifus from Mudae, then auto claims it through keyboard input. Everything runs from [`bot.py`](./bot.py).
 
 ## Note
-Lots of the stuff here *should* work, but no guarantees because I haven't done much testing. Also check out the v2 branch for a different design.
+Lots of the stuff here *should* work, but no guarantees because I haven't done much testing. Also check out the v2 branch for a different design (once again, very experimental).
 
 ## Features
 * Automatically adds the respective emoji to claim the waifu within a fraction of a second
