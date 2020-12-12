@@ -1,4 +1,7 @@
 # AutoWaifuClaimer
+## WARNING
+This project is archived and obsolete. Please see my updated implementation at https://github.com/RandomBananazz/AutoWaifuClaimerV3/.
+
 Just a fun mini-project that listens for rolled waifus from Mudae, then auto claims it through keyboard input. Everything runs from [`bot.py`](./bot.py).
 
 ## Note
